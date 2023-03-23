@@ -1,0 +1,8 @@
+Preparing building files in external folder:
+cmake -B"./build"
+
+Building with folder files previously created:
+cmake --build "./build"
+
+Version to choose in VS Code for building:
+Visual Studio Community 2022 Release - amd64
