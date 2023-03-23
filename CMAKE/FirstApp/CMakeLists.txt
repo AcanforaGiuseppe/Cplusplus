@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.18)
+project(FirstApp LANGUAGES CXX)
+#add_executable(HelloApp src/main.cpp src/hello.cpp include/hello.h)
+file(GLOB_RECURSE Sources src/*.cpp)
+file(GLOB_RECURSE Headers src/*.h include/*.h)
+add_executable(HelloApp ${Sources} ${Headers}  "src/prova21.cpp")
+target_include_directories(HelloApp PRIVATE include src)
+set_property(TARGET HelloApp PROPERTY CXX_STANDARD 17)
