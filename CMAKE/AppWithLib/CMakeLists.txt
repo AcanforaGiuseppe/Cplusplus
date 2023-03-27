@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(FirstApp LANGUAGES CXX)
+project(AppWithLib LANGUAGES CXX)
 add_library(HelloCore SHARED core/src/hello.cpp core/include/hello.h)
 target_include_directories(HelloCore PUBLIC core/include)
 add_executable(HelloApp app/src/main.cpp)
