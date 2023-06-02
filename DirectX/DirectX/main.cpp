@@ -14,9 +14,53 @@ ID3D12Heap* Create_Heap(ID3D12Device* device, D3D12_HEAP_TYPE type, UINT64 size)
 	HRESULT result = device->CreateHeap(&heap_desc, __uuidof(ID3D12Heap), reinterpret_cast<void**>(&heap));
 
 	if (!SUCCEEDED(result))
-		std::cerr << "Unable to cread Heap " << result << std::endl;
+		std::cerr << "Unable to create Heap " << result << std::endl;
 
 	return heap;
+}
+
+ID3D12Resource* Create_Buffer_in_Heap(ID3D12Device* device, ID3D12Heap* heap, UINT64 heap_offset, UINT64 size)
+{
+	D3D12_RESOURCE_DESC heap_desc = {};
+	heap_desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	heap_desc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+	heap_desc.Width = size;
+	heap_desc.Height = 1;
+	heap_desc.DepthOrArraySize = 1;
+	heap_desc.MipLevels = 1;
+	heap_desc.Format = DXGI_FORMAT_UNKNOWN;
+	heap_desc.SampleDesc.Count = 1;
+	heap_desc.SampleDesc.Quality = 0;
+	heap_desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	heap_desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	ID3D12Resource* resource = nullptr;
+	D3D12_RESOURCE_STATES state;
+
+	switch (heap->GetDesc().Properties.Type)
+	{
+	case D3D12_HEAP_TYPE_DEFAULT:
+		state = D3D12_RESOURCE_STATE_COMMON;
+		break;
+	case D3D12_HEAP_TYPE_UPLOAD:
+		state = D3D12_RESOURCE_STATE_GENERIC_READ;
+		break;
+	case D3D12_HEAP_TYPE_READBACK:
+		state = D3D12_RESOURCE_STATE_COPY_DEST;
+		break;
+	case D3D12_HEAP_TYPE_CUSTOM:
+		state = D3D12_RESOURCE_STATE_COMMON;
+		break;
+	default:
+		break;
+	}
+
+	HRESULT result = device->CreatePlacedResource(heap, heap_offset, &heap_desc, state, nullptr, __uuidof(ID3D12Resource), reinterpret_cast<void**>(&resource));
+
+	if (!SUCCEEDED(result))
+		std::cerr << "Unable to initialize " << result << std::endl;
+
+	return resource;
 }
 
 ID3D12Resource* Create_Buffer(ID3D12Device* device, D3D12_HEAP_TYPE type, UINT64 size)
@@ -38,7 +82,6 @@ ID3D12Resource* Create_Buffer(ID3D12Device* device, D3D12_HEAP_TYPE type, UINT64
 	heap_desc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 	ID3D12Resource* resource = nullptr;
-
 	D3D12_RESOURCE_STATES state;
 
 	switch (type)
@@ -46,19 +89,15 @@ ID3D12Resource* Create_Buffer(ID3D12Device* device, D3D12_HEAP_TYPE type, UINT64
 	case D3D12_HEAP_TYPE_DEFAULT:
 		state = D3D12_RESOURCE_STATE_COMMON;
 		break;
-
 	case D3D12_HEAP_TYPE_UPLOAD:
 		state = D3D12_RESOURCE_STATE_GENERIC_READ;
 		break;
-
 	case D3D12_HEAP_TYPE_READBACK:
 		state = D3D12_RESOURCE_STATE_COPY_DEST;
 		break;
-
 	case D3D12_HEAP_TYPE_CUSTOM:
 		state = D3D12_RESOURCE_STATE_COMMON;
 		break;
-
 	default:
 		break;
 	}
@@ -73,17 +112,15 @@ ID3D12Resource* Create_Buffer(ID3D12Device* device, D3D12_HEAP_TYPE type, UINT64
 
 int main(int argc, char** argv)
 {
-	// Initialize COM for older versions
 	HRESULT HR = CoInitializeEx(nullptr, 0);
 
 	if (!SUCCEEDED(HR))
 	{
-		std::cerr << "unable to initialize " << HR << std::endl;
+		std::cerr << "Unable to initialize " << HR << std::endl;
 		return -1;
 	}
 
-	IDXGIFactory* factory = nullptr;
-	HRESULT result = CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, __uuidof(IDXGIFactory), reinterpret_cast<void**>(&factory));
+	IDXGIFactory* factory = nullptr;	HRESULT result = CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, __uuidof(IDXGIFactory), reinterpret_cast<void**>(&factory));
 
 	if (!SUCCEEDED(result))
 	{
@@ -92,13 +129,12 @@ int main(int argc, char** argv)
 	}
 
 	std::cout << "OK" << std::endl;
-
 	ID3D12Debug* debug = nullptr;
 	result = D3D12GetDebugInterface(__uuidof(ID3D12Debug), reinterpret_cast<void**>(&debug));
 
 	if (!SUCCEEDED(result))
 	{
-		std::cerr << "unable to create debug" << result << std::endl;
+		std::cerr << "Unable to create debug " << result << std::endl;
 		return -1;
 	}
 	else
@@ -169,6 +205,7 @@ int main(int argc, char** argv)
 				std::cerr << "Unable to get description of the output " << result << std::endl;
 				return -1;
 			}
+
 			std::wcout
 				<< output_desc.DeviceName
 				<< " " << output_desc.DesktopCoordinates.left
@@ -183,23 +220,22 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			std::cerr << "unable to Enumerate IDXGIOutput " << result << std::endl;
+			std::cerr << "Unable to Enumerate IDXGIOutput " << result << std::endl;
 			return -1;
 		}
 	}
 
 	// Create Direct3D12 device
-	ID3D12Device* device = nullptr;
-	result = D3D12CreateDevice(best_adapter, D3D_FEATURE_LEVEL_12_1, __uuidof(ID3D12Device), reinterpret_cast<void**>(&device));
+	ID3D12Device* device = nullptr;	result = D3D12CreateDevice(best_adapter, D3D_FEATURE_LEVEL_12_1, __uuidof(ID3D12Device), reinterpret_cast<void**>(&device));
 
 	if (!SUCCEEDED(result))
 	{
-		std::cerr << "unable to create Device" << result << std::endl;
+		std::cerr << "Unable to create Device " << result << std::endl;
 		return -1;
 	}
 	else
 	{
-		std::cout << " Device Created" << std::endl;
+		std::cout << "Device Created" << std::endl;
 	}
 
 	ID3D12Resource* buffer_upload = Create_Buffer(device, D3D12_HEAP_TYPE_UPLOAD, 1024);
@@ -222,7 +258,7 @@ int main(int argc, char** argv)
 
 	if (!SUCCEEDED(result))
 	{
-		std::cerr << "failed to map buffer" << result << std::endl;
+		std::cerr << "Failed to map buffer" << result << std::endl;
 		return -1;
 	}
 
@@ -268,7 +304,7 @@ int main(int argc, char** argv)
 
 	if (!SUCCEEDED(result))
 	{
-		std::cerr << "Failed to create  GraphicsCommandList " << result << std::endl;
+		std::cerr << "Failed to create GraphicsCommandList " << result << std::endl;
 		return -1;
 	}
 
@@ -283,9 +319,11 @@ int main(int argc, char** argv)
 	graphics_command_list->Reset(command_allocator, nullptr);
 	graphics_command_list->CopyResource(buffer_readback, buffer_default);
 	graphics_command_list->Close();
+
 	queue->ExecuteCommandLists(1, reinterpret_cast<ID3D12CommandList**>(&graphics_command_list));
 	queue->Signal(fence, 2);
 	fence->SetEventOnCompletion(2, event);
+
 	WaitForSingleObject(event, INFINITE);
 
 	result = buffer_readback->Map(subresource, range, reinterpret_cast<void**>(&data));
@@ -305,6 +343,63 @@ int main(int argc, char** argv)
 
 	if (heap == nullptr)
 		std::cerr << "Failed to create an Heap" << std::endl;
+
+	D3D12_ROOT_PARAMETER1 Parameters[2] = {};
+	Parameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	Parameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	Parameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_UAV;
+	Parameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	D3D12_VERSIONED_ROOT_SIGNATURE_DESC Signature = {};
+	Signature.Version = D3D_ROOT_SIGNATURE_VERSION_1_1;
+	Signature.Desc_1_1.NumParameters = 2;
+	Signature.Desc_1_1.pParameters = Parameters;
+
+	ID3DBlob* blob = nullptr;
+	result = D3D12SerializeVersionedRootSignature(&Signature, &blob, nullptr);
+
+	if (!SUCCEEDED(result))
+	{
+		std::cerr << "Failed to serialize root signature " << result << std::endl;
+		return -1;
+	}
+
+	ID3D12RootSignature* Root_signature = nullptr;
+	result = device->CreateRootSignature(0, blob->GetBufferPointer(), blob->GetBufferSize(), __uuidof(ID3D12RootSignature), reinterpret_cast<void**>(&Root_signature));
+
+	if (!SUCCEEDED(result))
+	{
+		std::cerr << "Failed to create root signature " << result << std::endl;
+		return -1;
+	}
+
+	D3D12_DESCRIPTOR_HEAP_DESC Descriptor_heap_desc = {};
+	Descriptor_heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	Descriptor_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	Descriptor_heap_desc.NumDescriptors = 2;
+
+	ID3D12DescriptorHeap* Descriptor_heap = nullptr;
+	result = device->CreateDescriptorHeap(&Descriptor_heap_desc, __uuidof(ID3D12DescriptorHeap), reinterpret_cast<void**>(&Descriptor_heap));
+
+	if (!SUCCEEDED(result))
+	{
+		std::cerr << "Failed to create Descriptor Heap" << result << std::endl;
+		return -1;
+	}
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC Resourse_view_desc = {};
+	Resourse_view_desc.Format = DXGI_FORMAT_R32_FLOAT;
+	Resourse_view_desc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	Resourse_view_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	Resourse_view_desc.Buffer.NumElements = 1024 / 4;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE Descriptor_handle = {};
+	device->CreateShaderResourceView(buffer_default, &Resourse_view_desc, Descriptor_handle);
+
+	//TODO device->CreateUnorderedAccessView(,)
+
+	ID3D12Resource* resource_1 = Create_Buffer_in_Heap(device, heap, 0, 2 * 1024);
+	ID3D12Resource* resource_2 = Create_Buffer_in_Heap(device, heap, 0, 2 * 1024);
 
 	buffer_upload->Release();
 	buffer_default->Release();
