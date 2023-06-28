@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chip-8 Emulator", "Chip-8 Emulator\Chip-8 Emulator.vcxproj", "{5616B180-945F-4C28-8BE8-B93E2E1B613F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chip-8 Test", "Chip-8 Test\Chip-8 Test.vcxproj", "{8D4F293F-8ED5-4604-8ACB-73DD5B820723}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chip-8 Shared", "Chip-8 Shared\Chip-8 Shared.vcxitems", "{6C13920B-2C10-476C-ABCE-BA01F908B257}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Debug|x64.ActiveCfg = Debug|x64
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Debug|x64.Build.0 = Debug|x64
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Debug|x86.ActiveCfg = Debug|Win32
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Debug|x86.Build.0 = Debug|Win32
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Release|x64.ActiveCfg = Release|x64
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Release|x64.Build.0 = Release|x64
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Release|x86.ActiveCfg = Release|Win32
+		{5616B180-945F-4C28-8BE8-B93E2E1B613F}.Release|x86.Build.0 = Release|Win32
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Debug|x64.ActiveCfg = Debug|x64
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Debug|x64.Build.0 = Debug|x64
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Debug|x86.ActiveCfg = Debug|Win32
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Debug|x86.Build.0 = Debug|Win32
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Release|x64.ActiveCfg = Release|x64
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Release|x64.Build.0 = Release|x64
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Release|x86.ActiveCfg = Release|Win32
+		{8D4F293F-8ED5-4604-8ACB-73DD5B820723}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {798EC7DD-DFF8-4936-8D0E-AD263D2A865A}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Chip-8 Shared\Chip-8 Shared.vcxitems*{5616b180-945f-4c28-8be8-b93e2e1b613f}*SharedItemsImports = 4
+		Chip-8 Shared\Chip-8 Shared.vcxitems*{6c13920b-2c10-476c-abce-ba01f908b257}*SharedItemsImports = 9
+		Chip-8 Shared\Chip-8 Shared.vcxitems*{8d4f293f-8ed5-4604-8acb-73dd5b820723}*SharedItemsImports = 4
+	EndGlobalSection
+EndGlobal

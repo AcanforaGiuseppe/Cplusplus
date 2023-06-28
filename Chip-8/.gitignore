@@ -397,4 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-Chip8/SDL2-2.26.0
+SDL2-2.26.0
